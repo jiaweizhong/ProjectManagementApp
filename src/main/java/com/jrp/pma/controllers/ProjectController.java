@@ -9,24 +9,24 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.jrp.pma.dao.EmployeeRepository;
-import com.jrp.pma.dao.ProjectRepository;
 import com.jrp.pma.entities.Employee;
 import com.jrp.pma.entities.Project;
+import com.jrp.pma.services.EmployeeService;
+import com.jrp.pma.services.ProjectService;
 
 @Controller
 @RequestMapping("/projects") // route to this URL for project related
 public class ProjectController {
 	
 	@Autowired // spring auto create instance in repository
-	ProjectRepository proRepo;
+	ProjectService proService;
 	
 	@Autowired
-	EmployeeRepository empRepo;
+	EmployeeService empService;
 	
 	@GetMapping
 	public String displayProject(Model model) {
-		List<Project> projects = proRepo.findAll();
+		List<Project> projects = proService.getAll();
 		model.addAttribute("employees", projects);
 		return "projects/list-projects";
 	}
@@ -34,7 +34,7 @@ public class ProjectController {
 	@GetMapping("/new")
 	public String displayProjectForm(Model model) {
 		Project aProject = new Project(); // required empty constructor of object
-		List<Employee> employees = empRepo.findAll();
+		List<Employee> employees = empService.getAll();
 		// add to model
 		model.addAttribute("project", aProject);
 		model.addAttribute("allEmployees", employees);
@@ -44,7 +44,7 @@ public class ProjectController {
 	@PostMapping("/save")
 	public String createProject(Project project, Model model) {
 		// this should save the project to database
-		proRepo.save(project);
+		proService.save(project);
 		// save employees assigned to project
 		
 		// use redirect to prevent duplicate submission

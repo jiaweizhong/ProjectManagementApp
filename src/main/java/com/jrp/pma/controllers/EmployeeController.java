@@ -9,19 +9,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.jrp.pma.dao.EmployeeRepository;
 import com.jrp.pma.entities.Employee;
+import com.jrp.pma.services.EmployeeService;
 
 @Controller
 @RequestMapping("/employees") // route to this URL for employee related
 public class EmployeeController {
 	
 	@Autowired // spring auto create instance in repository
-	EmployeeRepository empRepo;
+	EmployeeService empService;
 	
 	@GetMapping
 	public String displayEmployee(Model model) {
-		List<Employee> employees = empRepo.findAll();
+		List<Employee> employees = empService.getAll();
 		model.addAttribute("employees", employees);
 		return "employees/list-employees";
 	}
@@ -36,7 +36,7 @@ public class EmployeeController {
 	@PostMapping("/save")
 	public String createEmployee(Employee employee, Model model) {
 		// this should save the project to database
-		empRepo.save(employee);
+		empService.save(employee);
 		// use redirect to prevent duplicate submission
 		return "redirect:/employees/new";
 	}
